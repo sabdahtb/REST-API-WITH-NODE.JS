@@ -1,0 +1,36 @@
+<div class="container mt-3">
+  <div class="col-md-8">
+    <p>
+      <h2 class="fw-bold">Tabel Buku</h2>
+    </p>
+    <table class="table mt-3">
+      <thead>
+        <tr>
+          <th scope="col">No</th>
+          <th scope="col">Judul Buku</th>
+          <th scope="col">Pengarang</th>
+          <th scope="col">Tahun terbit</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% if (bukus.length == 0) { %>
+          <tr>
+            <td colspan="4">
+              <h4 class="fw-bold fst-italic">
+                Buku Belum ditambahkan
+              </h2>
+            </td>
+          </tr>
+        <% } %>
+        <% bukus.forEach((buku, index) => { %>
+          <tr>
+            <th scope="row"><%= index + 1 %> </th>
+            <td><%- buku.judul.toUpperCase() %></td>
+            <td><%- buku.pengarang %></td>
+            <td><%= buku.tahun %></td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+</div>

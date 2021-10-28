@@ -4,53 +4,61 @@ const Buku = require("../models/model");
 const router = express.Router();
 
 router.get("/", (req, res) => {
-  res.send("Halo Gaes");
+  res.render("home", {
+    layout: "layouts/main",
+    title: "Perpustakaan App",
+  });
 });
 
-router.post("/nama", async (req, res) => {
+router.get("/tabel", async (req, res) => {
+  const bukus = await Buku.find();
+  try {
+    res.render("tabel", {
+      layout: "layouts/main",
+      title: "Manajemen Buku",
+      bukus,
+    });
+  } catch (error) {
+    res.json({ message: error.message });
+  }
+});
+
+router.get("/manajemen", async (req, res) => {
+  const bukus = await Buku.find();
+  try {
+    res.render("manajemen", {
+      layout: "layouts/main",
+      title: "Manajemen Buku",
+      bukus,
+    });
+  } catch (error) {
+    res.json({ message: error.message });
+  }
+});
+
+router.post("/addbuku", async (req, res) => {
   const buku = new Buku(req.body);
   try {
     await buku.save();
-    res.send("data ditambahkan");
+    res.redirect("manajemen");
   } catch (error) {
     res.json({ message: error.message });
   }
 });
 
-router.get("/buku", async (req, res) => {
-  bukus = await Buku.find();
+router.put("/manajemen", async (req, res) => {
+  updatedBuku = await Buku.updateOne({ _id: req.body.id }, { $set: req.body });
   try {
-    res.send(bukus);
+    res.redirect("manajemen");
   } catch (error) {
     res.json({ message: error.message });
   }
 });
 
-router.get("/detail/:id", async (req, res) => {
-  buku = await Buku.findOne({ _id: req.params.id });
+router.delete("/manajemen", async (req, res) => {
+  deletedBuku = await Buku.deleteOne({ _id: req.body.id });
   try {
-    res.send(buku);
-  } catch (error) {
-    res.json({ message: error.message });
-  }
-});
-
-router.put("/update/:id", async (req, res) => {
-  updatedBuku = await Buku.updateOne(
-    { _id: req.params.id },
-    { $set: req.body }
-  );
-  try {
-    res.send(updatedBuku);
-  } catch (error) {
-    res.json({ message: error.message });
-  }
-});
-
-router.delete("/delete/:id", async (req, res) => {
-  deletedBuku = await Buku.deleteOne({ _id: req.params.id });
-  try {
-    res.send(deletedBuku);
+    res.redirect("manajemen");
   } catch (error) {
     res.json({ message: error.message });
   }
